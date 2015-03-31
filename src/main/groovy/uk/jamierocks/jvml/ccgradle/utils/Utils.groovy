@@ -25,11 +25,6 @@ package uk.jamierocks.jvml.ccgradle.utils
 
 import com.google.common.base.Throwables
 
-import java.nio.channels.Channels
-import java.nio.channels.ReadableByteChannel
-import java.util.zip.ZipEntry
-import java.util.zip.ZipInputStream
-
 /**
  * Created by jamie on 31/03/15.
  */

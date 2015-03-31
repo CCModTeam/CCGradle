@@ -35,15 +35,20 @@ class CCPlugin implements Plugin<Project> {
     @Override
     void apply(Project project) {
         project.task("setupJvmlWorkspace") << {
-            project.getLogger().info("***************************");
-            project.getLogger().info("CCGradle by Jamie Mansfield");
-            project.getLogger().info("***************************");
+            project.getLogger().lifecycle("***************************");
+            project.getLogger().lifecycle("CCGradle by Jamie Mansfield");
+            project.getLogger().lifecycle("***************************");
 
             // These are all the files and directories required
             File outputDir = new File(project.getBuildDir(), "jvml");
             File cclibDir = new File(outputDir, "JVML-JIT/CCLib");
             File ccRuntime = new File(cclibDir, "build/jar/cc_rt.jar");
-            
+
+            // Create directories
+            if (!outputDir.exists()) {
+                outputDir.mkdir()
+            }
+
             // Clone the JVML-JIT repo
             try {
                 Utils.runProcess(outputDir, "git clone https://github.com/Team-CC-Corp/JVML-JIT.git")
