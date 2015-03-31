@@ -1,0 +1,18 @@
+sudo: false
+language: java
+jdk:
+  - oraclejdk8
+env:
+  global:
+    - LEX_DEPLOY=https://github.com/LexBot/Deploy.git DEPLOY_ROOT=/tmp/lex/deploy
+    - GIT_REPO=git@github.com:CCModTeam/Repo.git
+    - secure: "rwLvrXoqJpxkyzAUAIYCue7HgRYuJAJoDMVBIJaMP+1cpFJ++piF+11U9DtJlsOiG222RZEuopoSTf3pdR/1eTmXKAJsLcHPDYcud64krh1pP6q0yRPTXV4FbZY+RGN7Z4TC3mpq0tnaqHNh3p0Lxw4WNlMUErp82rsCuDBBK/w="
+after_success:
+  - git clone $LEX_DEPLOY $DEPLOY_ROOT && $DEPLOY_ROOT/maven_repo "gradle publish" oraclejdk8
+notifications:
+  email: false
+  irc:
+    channels:
+      - "irc.esper.net#jamierocks"
+    on_success: change
+    on_failure: always

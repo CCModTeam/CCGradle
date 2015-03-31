@@ -1,0 +1,39 @@
+apply plugin: 'groovy'
+apply plugin: 'maven-publish'
+apply plugin: 'idea'
+
+group = 'uk.jamierocks.jvml'
+archivesBaseName = 'CCGradle'
+version = '1.0-SNAPSHOT'
+
+targetCompatibility = '1.8'
+sourceCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile gradleApi()
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            artifact sourcesJar
+
+            repositories {
+                maven {
+                    url = "$buildDir/repo"
+                }
+            }
+        }
+    }
+}
