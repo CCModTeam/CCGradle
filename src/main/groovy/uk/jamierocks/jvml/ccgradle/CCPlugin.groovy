@@ -46,7 +46,11 @@ class CCPlugin implements Plugin<Project> {
             File ccRuntime = new File(cclibDir, "build/jar/cc_rt.jar");
 
             // Download zip, extract it and delete it
-            Utils.downloadFile(new URL("https://github.com/Team-CC-Corp/JVML-JIT/archive/master.zip"), zipFile);
+            try {
+                Utils.downloadFile(new URL("https://github.com/Team-CC-Corp/JVML-JIT/archive/master.zip"), zipFile);
+            } catch(Exception e) {
+                project.getLogger().error("Oh noes! Something broke", e)
+            }
             project.getLogger().debug("Downloaded JVML-JIT");
 
             Utils.unzip(zipFile, outputDir);
