@@ -46,7 +46,7 @@ class CCPlugin implements Plugin<Project> {
 
             // Create directories
             if (!outputDir.exists()) {
-                outputDir.mkdir()
+                outputDir.mkdirs()
             }
 
             // Clone the JVML-JIT repo
