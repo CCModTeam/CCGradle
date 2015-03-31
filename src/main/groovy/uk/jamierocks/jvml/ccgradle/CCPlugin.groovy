@@ -37,6 +37,7 @@ class CCPlugin implements Plugin<Project> {
         project.task("setupJvmlWorkspace") << {
             // These are all the files and directories required
             File zipFile = new File(project.getBuildDir(), "jvml/jvml.zip");
+            zipFile.createNewFile();
             File outputDir = new File(project.getBuildDir(), "jvml");
             File cclibDir = new File(project.getBuildDir(), "jvml/JVML-JIT-master/CCLib");
             File ccRuntime = new File(cclibDir, "build/jar/cc_rt.jar");
