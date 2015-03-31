@@ -35,9 +35,12 @@ class CCPlugin implements Plugin<Project> {
     @Override
     void apply(Project project) {
         project.task("setupJvmlWorkspace") << {
+            project.getLogger().info("***************************");
+            project.getLogger().info("CCGradle by Jamie Mansfield");
+            project.getLogger().info("***************************");
+
             // These are all the files and directories required
             File zipFile = new File(project.getBuildDir(), "jvml/jvml.zip");
-            zipFile.createNewFile();
             File outputDir = new File(project.getBuildDir(), "jvml");
             File cclibDir = new File(project.getBuildDir(), "jvml/JVML-JIT-master/CCLib");
             File ccRuntime = new File(cclibDir, "build/jar/cc_rt.jar");
@@ -45,15 +48,19 @@ class CCPlugin implements Plugin<Project> {
             // Download zip, extract it and delete it
             Utils.downloadFile(new URL("https://github.com/Team-CC-Corp/JVML-JIT/archive/master.zip"), zipFile);
             project.getLogger().debug("Downloaded JVML-JIT");
-            
+
             Utils.unzip(zipFile, outputDir);
             project.getLogger().debug("Extracted JVML-JIT");
-            
+
             zipFile.delete();
             project.getLogger().debug("Deleted old JVML-JIT archive");
 
             // Build CCLib
-            Utils.runProcess(cclibDir, "ant build");
+            try {
+                Utils.runProcess(cclibDir, "ant build");
+            } catch (Exception e) {
+                project.getLogger().error("Oh noes! Something broke", e)
+            }
             project.getLogger().debug("Built CCLib");
 
             // Add CCLib runtime to project
