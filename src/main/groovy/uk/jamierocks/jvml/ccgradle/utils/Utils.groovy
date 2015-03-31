@@ -35,59 +35,7 @@ import java.util.zip.ZipInputStream
  */
 class Utils {
 
-    static void downloadFile(URL url, File output) {
-        ReadableByteChannel rbc = Channels.newChannel(url.openStream());
-        FileOutputStream fos = new FileOutputStream(output);
-        fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-    }
-
-    /**
-     * Unzip it
-     *
-     * Thanks to mkyong ( http://www.mkyong.com/java/how-to-decompress-files-from-a-zip-file/ )
-     *
-     * @param zipFile input zip file
-     * @param output zip file output folder
-     */
-    static void unzip(File zipFile, File outputFolder) throws Exception {
-        byte[] buffer = new byte[1024];
-
-        //create output directory is not exists
-        if (!outputFolder.exists()) {
-            outputFolder.mkdirs();
-        }
-
-        //get the zip file content
-        ZipInputStream zis =
-                new ZipInputStream(new FileInputStream(zipFile));
-        //get the zipped file list entry
-        ZipEntry ze = zis.getNextEntry();
-
-        while (ze != null) {
-            String fileName = ze.getName();
-            File newFile = new File(outputFolder, fileName);
-
-            //create all non exists folders
-            //else you will hit FileNotFoundException for compressed folder
-            new File(newFile.getParent()).mkdirs();
-
-            FileOutputStream fos = new FileOutputStream(newFile);
-
-            int len;
-            while ((len = zis.read(buffer)) > 0) {
-                fos.write(buffer, 0, len);
-            }
-
-            fos.close();
-            ze = zis.getNextEntry();
-        }
-
-        zis.closeEntry();
-        zis.close();
-    }
-
-
-    public static int runProcess(File workDir, String... command) throws Exception {
+    static int runProcess(File workDir, String... command) throws Exception {
         ProcessBuilder pb = new ProcessBuilder(command);
         pb.directory(workDir);
         pb.environment().put("JAVA_HOME", System.getProperty("java.home"));

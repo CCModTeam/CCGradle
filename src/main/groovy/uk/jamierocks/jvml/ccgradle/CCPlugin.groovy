@@ -40,24 +40,16 @@ class CCPlugin implements Plugin<Project> {
             project.getLogger().info("***************************");
 
             // These are all the files and directories required
-            File zipFile = new File(project.getBuildDir(), "jvml/jvml.zip");
             File outputDir = new File(project.getBuildDir(), "jvml");
-            File cclibDir = new File(project.getBuildDir(), "jvml/JVML-JIT-master/CCLib");
+            File cclibDir = new File(outputDir, "JVML-JIT/CCLib");
             File ccRuntime = new File(cclibDir, "build/jar/cc_rt.jar");
-
-            // Download zip, extract it and delete it
+            
+            // Clone the JVML-JIT repo
             try {
-                Utils.downloadFile(new URL("https://github.com/Team-CC-Corp/JVML-JIT/archive/master.zip"), zipFile);
+                Utils.runProcess(outputDir, "git clone https://github.com/Team-CC-Corp/JVML-JIT.git")
             } catch (Exception e) {
                 project.getLogger().error("Oh noes! Something broke", e)
             }
-            project.getLogger().debug("Downloaded JVML-JIT");
-
-            Utils.unzip(zipFile, outputDir);
-            project.getLogger().debug("Extracted JVML-JIT");
-
-            zipFile.delete();
-            project.getLogger().debug("Deleted old JVML-JIT archive");
 
             // Build CCLib
             try {
