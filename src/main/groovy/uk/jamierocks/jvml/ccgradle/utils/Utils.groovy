@@ -49,13 +49,12 @@ class Utils {
      * @param zipFile input zip file
      * @param output zip file output folder
      */
-    static void unzip(String zipFile, String outputFolder) throws Exception {
+    static void unzip(File zipFile, File outputFolder) throws Exception {
         byte[] buffer = new byte[1024];
 
         //create output directory is not exists
-        File folder = new File(outputFolder);
-        if (!folder.exists()) {
-            folder.mkdir();
+        if (!outputFolder.exists()) {
+            outputFolder.mkdirs();
         }
 
         //get the zip file content
@@ -66,7 +65,7 @@ class Utils {
 
         while (ze != null) {
             String fileName = ze.getName();
-            File newFile = new File(outputFolder + File.separator + fileName);
+            File newFile = new File(outputFolder, fileName);
 
             //create all non exists folders
             //else you will hit FileNotFoundException for compressed folder
