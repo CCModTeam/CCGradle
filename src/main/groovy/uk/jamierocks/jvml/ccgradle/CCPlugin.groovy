@@ -43,6 +43,7 @@ class CCPlugin implements Plugin<Project> {
             File outputDir = new File(project.getBuildDir(), "jvml");
             File repoDir = new File(outputDir, "JVML-JIT")
             File cclibDir = new File(repoDir, "CCLib");
+            File ccRuntime = new File(cclibDir, "build/jar/cc_rt.jar")
 
             // Create directories
             if (!outputDir.exists()) {
@@ -66,7 +67,7 @@ class CCPlugin implements Plugin<Project> {
 
             // Add CCLib runtime to project
             project.dependencies {
-                compile project.files('build/jvml/JVML-JIT/build/jar/cc_rt.jar')
+                compile project.files(ccRuntime)
             }
             project.getLogger().debug("Added CCLib to the dependencies");
         };
