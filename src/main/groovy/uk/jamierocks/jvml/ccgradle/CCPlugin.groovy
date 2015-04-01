@@ -54,7 +54,7 @@ class CCPlugin implements Plugin<Project> {
 
             // Build CCLib
             try {
-                Utils.runProcess(cclibDir, "ant build");
+                Utils.runProcess(cclibDir, "ant", "build");
             } catch (Exception e) {
                 project.getLogger().error("Oh noes! Something broke", e)
             }
