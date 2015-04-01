@@ -61,7 +61,7 @@ class CCPlugin implements Plugin<Project> {
             project.getLogger().debug("Built CCLib");
 
             // Add CCLib runtime to project
-            project.dependencies << {
+            project.dependencies {
                 compile files(ccRuntime)
             }
             project.getLogger().debug("Added CCLib to the dependencies");
