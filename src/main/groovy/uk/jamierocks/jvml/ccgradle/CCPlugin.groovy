@@ -50,11 +50,7 @@ class CCPlugin implements Plugin<Project> {
             }
 
             // Clone the JVML-JIT repo
-            try {
-                Utils.runProcess(outputDir, "git clone https://github.com/Team-CC-Corp/JVML-JIT.git")
-            } catch (Exception e) {
-                project.getLogger().error("Oh noes! Something broke", e)
-            }
+            Utils.clone("https://github.com/Team-CC-Corp/JVML-JIT.git", outputDir)
 
             // Build CCLib
             try {

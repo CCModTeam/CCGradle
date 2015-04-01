@@ -11,10 +11,15 @@ sourceCompatibility = '1.8'
 
 repositories {
     mavenCentral()
+    maven {
+        url 'https://repo.eclipse.org/content/groups/releases/'
+    }
 }
 
 dependencies {
     compile gradleApi()
+
+    compile 'org.eclipse.jgit:org.eclipse.jgit:3.7.0.201502260915-r'
 }
 
 task sourcesJar(type: Jar) {

@@ -24,11 +24,18 @@
 package uk.jamierocks.jvml.ccgradle.utils
 
 import com.google.common.base.Throwables
+import org.eclipse.jgit.api.Git
+import org.eclipse.jgit.api.errors.GitAPIException
 
 /**
  * Created by jamie on 31/03/15.
  */
 class Utils {
+
+    static void clone(String url, File target) throws GitAPIException {
+        Git result = Git.cloneRepository().setURI(url).setDirectory(target).call();
+        result.close();
+    }
 
     static int runProcess(File workDir, String... command) throws Exception {
         ProcessBuilder pb = new ProcessBuilder(command);
