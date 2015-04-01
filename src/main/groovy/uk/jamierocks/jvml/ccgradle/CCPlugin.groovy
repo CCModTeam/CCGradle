@@ -54,7 +54,7 @@ class CCPlugin implements Plugin<Project> {
                 repoDir.deleteDir()
             }
             Utils.clone("https://github.com/Team-CC-Corp/JVML-JIT.git", repoDir)
-            project.getLogger("Cloned JVML-JIT repo")
+            project.getLogger().debug("Cloned JVML-JIT repo")
 
             // Build CCLib
             try {
