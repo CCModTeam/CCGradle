@@ -50,7 +50,7 @@ class CCPlugin implements Plugin<Project> {
             }
 
             // Clone the JVML-JIT repo
-            Utils.clone("https://github.com/Team-CC-Corp/JVML-JIT.git", outputDir)
+            Utils.clone("https://github.com/Team-CC-Corp/JVML-JIT.git", new File(outputDir, "JVML-JIT"))
 
             // Build CCLib
             try {
