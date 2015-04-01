@@ -41,8 +41,8 @@ class CCPlugin implements Plugin<Project> {
 
             // These are all the files and directories required
             File outputDir = new File(project.getBuildDir(), "jvml");
-            File cclibDir = new File(outputDir, "JVML-JIT/CCLib");
-            File ccRuntime = new File(cclibDir, "build/jar/cc_rt.jar");
+            File repoDir = new File(outputDir, "JVML-JIT")
+            File cclibDir = new File(repoDir, "CCLib");
 
             // Create directories
             if (!outputDir.exists()) {
@@ -50,7 +50,10 @@ class CCPlugin implements Plugin<Project> {
             }
 
             // Clone the JVML-JIT repo
-            Utils.clone("https://github.com/Team-CC-Corp/JVML-JIT.git", new File(outputDir, "JVML-JIT"))
+            if (repoDir.exists()) {
+                repoDir.deleteDir()
+            }
+            Utils.clone("https://github.com/Team-CC-Corp/JVML-JIT.git", repoDir)
 
             // Build CCLib
             try {
@@ -62,7 +65,7 @@ class CCPlugin implements Plugin<Project> {
 
             // Add CCLib runtime to project
             project.dependencies {
-                compile files(ccRuntime)
+                compile files('build/jvml/JVML-JIT/build/jar/cc_rt.jar')
             }
             project.getLogger().debug("Added CCLib to the dependencies");
         };
