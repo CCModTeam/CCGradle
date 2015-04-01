@@ -54,6 +54,7 @@ class CCPlugin implements Plugin<Project> {
                 repoDir.deleteDir()
             }
             Utils.clone("https://github.com/Team-CC-Corp/JVML-JIT.git", repoDir)
+            project.getLogger("Cloned JVML-JIT repo")
 
             // Build CCLib
             try {
@@ -65,7 +66,7 @@ class CCPlugin implements Plugin<Project> {
 
             // Add CCLib runtime to project
             project.dependencies {
-                compile files('build/jvml/JVML-JIT/build/jar/cc_rt.jar')
+                compile project.files('build/jvml/JVML-JIT/build/jar/cc_rt.jar')
             }
             project.getLogger().debug("Added CCLib to the dependencies");
         };
