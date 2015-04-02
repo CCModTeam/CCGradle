@@ -70,11 +70,12 @@ class CCPlugin implements Plugin<Project> {
                 compile project.files(ccRuntime)
             }
             project.getLogger().debug("Added CCLib to the dependencies");
-        };
-        project.with {
-            compileJava {
-                options.bootClasspath = "build/jvml/JVML-JIT/CCLib/build/jar/cc_rt.jar"
+            
+            project.with {
+                compileJava {
+                    options.bootClasspath = "build/jvml/JVML-JIT/CCLib/build/jar/cc_rt.jar"
+                }
             }
-        }
+        };
     }
 }
