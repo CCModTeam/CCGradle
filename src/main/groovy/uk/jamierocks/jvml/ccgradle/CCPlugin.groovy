@@ -34,16 +34,16 @@ class CCPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
-        project.task("setupJvmlWorkspace") << {
+        // These are all the files and directories required
+        File outputDir = new File(project.getBuildDir(), "jvml");
+        File repoDir = new File(outputDir, "JVML-JIT")
+        File cclibDir = new File(repoDir, "CCLib");
+        File ccRuntime = new File(cclibDir, "build/jar/cc_rt.jar")
+
+        project.task("downloadJvml") << {
             project.getLogger().lifecycle("***************************");
             project.getLogger().lifecycle("CCGradle by Jamie Mansfield");
             project.getLogger().lifecycle("***************************");
-
-            // These are all the files and directories required
-            File outputDir = new File(project.getBuildDir(), "jvml");
-            File repoDir = new File(outputDir, "JVML-JIT")
-            File cclibDir = new File(repoDir, "CCLib");
-            File ccRuntime = new File(cclibDir, "build/jar/cc_rt.jar")
 
             // Create directories
             if (!outputDir.exists()) {
@@ -58,24 +58,27 @@ class CCPlugin implements Plugin<Project> {
             project.getLogger().debug("Cloned JVML-JIT repo")
 
             // Build CCLib
-            try {
-                Utils.runProcess(cclibDir, "ant", "main");
-            } catch (Exception e) {
-                project.getLogger().error("Oh noes! Something broke", e)
+            project.with {
+                ant.importBuild(new File(cclibDir, "build.xml"))
             }
-            project.getLogger().debug("Built CCLib");
+            project.getLogger().debug("Built CCLib")
+        }
 
+        project.task("setupJvmlWorkspace") << {
             // Add CCLib runtime to project
             project.dependencies {
                 compile project.files(ccRuntime)
             }
             project.getLogger().debug("Added CCLib to the dependencies");
-            
+
+            // Set CCLib as the bootclasspath
             project.with {
                 compileJava {
                     options.bootClasspath = "build/jvml/JVML-JIT/CCLib/build/jar/cc_rt.jar"
                 }
             }
-        };
+            project.getLogger().debug("Set CCLib as the bootclasspath");
+        }
+        project.tasks.setupJvmlWorkspace.dependsOn 'main'
     }
 }

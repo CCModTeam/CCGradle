@@ -23,7 +23,6 @@
  */
 package uk.jamierocks.jvml.ccgradle.utils
 
-import com.google.common.base.Throwables
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.api.errors.GitAPIException
 
@@ -35,48 +34,5 @@ class Utils {
     static void clone(String url, File target) throws GitAPIException {
         Git result = Git.cloneRepository().setURI(url).setDirectory(target).call();
         result.close();
-    }
-
-    static int runProcess(File workDir, String... command) throws Exception {
-        ProcessBuilder pb = new ProcessBuilder(command);
-        pb.directory(workDir);
-        pb.environment().put("JAVA_HOME", System.getProperty("java.home"));
-
-        final Process ps = pb.start();
-
-        new Thread(new StreamRedirector(ps.getInputStream(), System.out)).start();
-        new Thread(new StreamRedirector(ps.getErrorStream(), System.err)).start();
-
-        int status = ps.waitFor();
-
-        if (status != 0) {
-            throw new RuntimeException("Error running command, return status !=0: " + Arrays.toString(command));
-        }
-
-        return status;
-    }
-
-    private static class StreamRedirector implements Runnable {
-
-        private final InputStream inStream;
-        private final PrintStream outputStream;
-
-        public StreamRedirector(InputStream input, PrintStream output) {
-            this.inStream = input;
-            this.outputStream = output;
-        }
-
-        @Override
-        public void run() {
-            BufferedReader br = new BufferedReader(new InputStreamReader(inStream));
-            try {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    outputStream.println(line);
-                }
-            } catch (IOException ex) {
-                throw Throwables.propagate(ex);
-            }
-        }
     }
 }
