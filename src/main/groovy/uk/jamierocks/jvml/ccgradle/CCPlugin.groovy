@@ -63,6 +63,7 @@ class CCPlugin implements Plugin<Project> {
             }
             project.getLogger().debug("Built CCLib")
         }
+        project.tasks.main.dependsOn 'downloadJvml'
 
         project.task("setupJvmlWorkspace") << {
             // Add CCLib runtime to project
