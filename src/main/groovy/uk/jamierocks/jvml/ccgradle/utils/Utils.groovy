@@ -31,8 +31,9 @@ import org.eclipse.jgit.api.errors.GitAPIException
  */
 class Utils {
 
-    static void clone(String url, File target) throws GitAPIException {
-        Git result = Git.cloneRepository().setURI(url).setDirectory(target).call();
-        result.close();
+    static void clone(String url, File target, String tag) throws GitAPIException {
+        Git result = Git.cloneRepository().setURI(url).setDirectory(target).call()
+        result.checkout().setName("tags/" + tag).call()
+        result.close()
     }
 }

@@ -34,16 +34,20 @@ class CCPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
+        // Add the extension
+        project.extensions.create("jvml", CCGradleExtension)
+
         // These are all the files and directories required
-        File outputDir = new File(project.getBuildDir(), "jvml");
-        File repoDir = new File(outputDir, "JVML-JIT")
-        File cclibDir = new File(repoDir, "CCLib");
+        File outputDir = new File(project.getBuildDir(), "jvml")
+        File versionsDir = new File(outputDir, "versions")
+        File repoDir = new File(versionsDir, project.jvml.version);
+        File cclibDir = new File(repoDir, "CCLib")
         File ccRuntime = new File(cclibDir, "build/jar/cc_rt.jar")
 
         project.task("downloadJvml") << {
-            project.getLogger().lifecycle("***************************");
-            project.getLogger().lifecycle("CCGradle by Jamie Mansfield");
-            project.getLogger().lifecycle("***************************");
+            project.getLogger().lifecycle("***************************")
+            project.getLogger().lifecycle("CCGradle by Jamie Mansfield")
+            project.getLogger().lifecycle("***************************")
 
             // Create directories
             if (!outputDir.exists()) {
@@ -51,11 +55,16 @@ class CCPlugin implements Plugin<Project> {
             }
 
             // Clone the JVML-JIT repo
-            if (repoDir.exists()) {
-                repoDir.deleteDir()
+            if (!repoDir.exists()) {
+                Utils.clone(
+                        "https://github.com/Team-CC-Corp/JVML-JIT.git",
+                        new File(versionsDir, project.jvml.version),
+                        project.jvml.version
+                )
+                project.getLogger().debug("Cloned JVML-JIT repo")
+            } else {
+                project.getLogger().debug("Already cloned")
             }
-            Utils.clone("https://github.com/Team-CC-Corp/JVML-JIT.git", repoDir)
-            project.getLogger().debug("Cloned JVML-JIT repo")
 
             // Build CCLib
             project.with {
@@ -63,23 +72,27 @@ class CCPlugin implements Plugin<Project> {
             }
             project.getLogger().debug("Built CCLib")
         }
-        project.tasks.main.dependsOn 'downloadJvml'
 
         project.task("setupJvmlWorkspace") << {
             // Add CCLib runtime to project
             project.dependencies {
                 compile project.files(ccRuntime)
             }
-            project.getLogger().debug("Added CCLib to the dependencies");
+            project.getLogger().debug("Added CCLib to the dependencies")
 
             // Set CCLib as the bootclasspath
             project.with {
                 compileJava {
-                    options.bootClasspath = "build/jvml/JVML-JIT/CCLib/build/jar/cc_rt.jar"
+                    options.bootClasspath = "build/jvml/versions/" + jvml.version + "/CCLib/build/jar/cc_rt.jar"
                 }
             }
-            project.getLogger().debug("Set CCLib as the bootclasspath");
+            project.getLogger().debug("Set CCLib as the bootclasspath")
         }
-        project.tasks.setupJvmlWorkspace.dependsOn 'main'
+        project.tasks.setupJvmlWorkspace.dependsOn 'downloadJvml'
+    }
+
+    class CCGradleExtension {
+
+        def String version = 'latest'
     }
 }
